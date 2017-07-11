@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Task</string>
+
+    <string-array name="vipList">
+	    <item>GRAY</item>
+        <item>RED</item>
+        <item>YELLOW</item>
+        <item>GREEN</item>
+    </string-array>
+
+</resources>
