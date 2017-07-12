@@ -42,7 +42,6 @@ public class ActivityEdit extends Activity implements OnClickListener {
 	
 	Intent intent = getIntent();
 	if(intent != null) {
-//	  Toast.makeText(this, "ActivityEdit_notNullIntent", Toast.LENGTH_LONG).show();
       name = intent.getStringExtra("name");
       text = intent.getStringExtra("text");
       vip = intent.getStringExtra("vip");
@@ -59,13 +58,11 @@ public class ActivityEdit extends Activity implements OnClickListener {
 	    if(vip != "") {
 		  vip = spVip.getSelectedItem().toString();
 		}
-//		etName.setBackgroundColor(getColor(vip));
 		etName.setTextColor(Note.getColor(vip));
       }
 	  @Override
       public void onNothingSelected(AdapterView<?> arg0) {}
     });
-//	vip = spVip.getSelectedItem().toString();	
   }
   
   @Override
@@ -76,13 +73,12 @@ public class ActivityEdit extends Activity implements OnClickListener {
       case R.id.btnSave:
         intent.putExtra("name", etName.getText().toString());
 	    intent.putExtra("text", etText.getText().toString());
-        intent.putExtra("vip", vip);//etName.getTextColors().getDefaultColor()
-//		Toast.makeText(this, "vip = " + etName.getTextColors().getDefaultColor(), Toast.LENGTH_LONG).show();
+        intent.putExtra("vip", vip);
         break;
 	  case R.id.btnCancel:
         intent.putExtra("name", name);
 	    intent.putExtra("text", text);
-        intent.putExtra("vip", oldVip);//getColor(vip)
+        intent.putExtra("vip", oldVip);
         break;
       default:
         break;
@@ -118,3 +114,5 @@ public class ActivityEdit extends Activity implements OnClickListener {
     super.onResume();
   }
 }
+
+//		Toast.makeText(this, "vip = " + etName.getTextColors().getDefaultColor(), Toast.LENGTH_LONG).show();

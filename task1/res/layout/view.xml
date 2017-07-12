@@ -47,5 +47,24 @@
       android:layout_width="wrap_content" 
       android:id="@+id/tvText">
     </TextView>
+	<LinearLayout
+	  android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+	  <Button
+        android:id="@+id/btnFileW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_weight="1"
+        android:text="Write to file">
+      </Button>
+	  <Button
+        android:id="@+id/btnFileR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_weight="1"
+        android:text="Read from file">
+      </Button>
+	</LinearLayout>
   </LinearLayout>
 </LinearLayout>

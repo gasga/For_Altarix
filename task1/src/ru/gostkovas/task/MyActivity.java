@@ -1,6 +1,5 @@
 package ru.gostkovas.task;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +13,12 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.widget.Toast;
 import android.content.ContentValues;
-//import android.content.Context;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 //import android.database.sqlite.SQLiteOpenHelper;
@@ -35,8 +37,7 @@ import java.sql.Date;
 
 //import ru.gostkovas.task.R;
 
-
-public class MyActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class MyActivity extends Activity implements OnClickListener, OnItemClickListener, LocationListener {
 
   private static final int CM_DELETE_ID = 1;
   // maps key-names
@@ -51,18 +52,18 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
   ArrayList<Map<String, Object>> notes;
   Button btnCreate;
   DBHelper dbHelper;
-//  Note note;
   SimpleDateFormat sdf;
   ContentValues cv;
   SQLiteDatabase db;
+  LocationManager lm;
+  Location loc;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-
-//	if(savedInstanceState == null) {//Toast.makeText(this, "isInstanceState", Toast.LENGTH_LONG).show();
-
+	lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
 	//	set date format
 	sdf = new SimpleDateFormat("HH:mm:ss");	//"dd.MM.yyyy"
@@ -73,9 +74,7 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
     if(notes == null) notes = new ArrayList<>();//Map<String, Object>
     // array name-keys maps (from read-out)
     String[] from = { ATTRIBUTE_NAME, ATTRIBUTE_DATE };
-//	String[] from = { ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_DATE };
     // array view-elements (template item.xml)
-//    int[] to = { R.id.tvId, R.id.tvName, R.id.tvDate };
 	int[] to = { R.id.tvName, R.id.tvDate };
     // create adapter
     sAdapter = new MySimpleAdapter(this, notes, R.layout.item, from, to);
@@ -104,7 +103,6 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
 	
 	// update adapter
 	sAdapter.notifyDataSetChanged();
-//	}
   }
 
   //============== EDIT NOTE ==============
@@ -124,6 +122,7 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
   public void onClick(View v) {
 	switch (v.getId()) {
       case R.id.btnCreate:
+	    loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	    //	call ActivityEdit
         Intent intent = new Intent(this, ActivityEdit.class);
         startActivityForResult(intent, 1);
@@ -142,7 +141,6 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
 	if(requestCode == 1) {
 
 	  Note note = new Note();
-//	  note.setId(notes.size() + 1);
       note.setDate(new Date(System.currentTimeMillis()));
 	  note.setName(data.getStringExtra("name"));
 	  note.setText(data.getStringExtra("text"));
@@ -192,13 +190,9 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
     if (item.getItemId() == CM_DELETE_ID) {
       // get note info
       AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-//Toast.makeText(this, "befor", Toast.LENGTH_LONG).show();
-	  // !!!!!!!!!!!!!!CALL SQLite here!!!!!!!!!!!!!!!!!(write to DB)
-	  //	finding id by acmi.position(convert String to int)
-////	  int id = Integer.parseInt(notes.get(acmi.position).get(ATTRIBUTE_ID));
-//	  int id = (Integer) (notes.get(acmi.position).get(ATTRIBUTE_ID));
+	  // CALL SQLite (write to DB)
+	  //	finding id by acmi.position
 	  int id = (int) (notes.get(acmi.position).get(ATTRIBUTE_ID));
-//Toast.makeText(this, "after", Toast.LENGTH_LONG).show();
 	  int delCount = db.delete("mytable", "id = " + id, null);
       // remove map (note) from arraylist
       notes.remove(acmi.position);
@@ -225,7 +219,6 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
         notes.add(fillMap(note));
       } while (c.moveToNext());
 //		// update adapter
-//		sAdapter.notifyDataSetChanged();
     }
     c.close();
   }
@@ -274,7 +267,25 @@ public class MyActivity extends Activity implements OnClickListener, OnItemClick
   protected void onResume() {
     super.onResume();
   }
-
-
+  
+  @Override
+  public void onLocationChanged (Location loc) {
+    if (loc != null) {
+      this.loc = loc;
+      double sh = loc.getLatitude(); //sh
+      double dol = loc.getLongitude(); //dol
+	  Toast.makeText(this, "Широта = " + sh + ", Долгота = " + dol, Toast.LENGTH_LONG).show();
+    }
+  }
+  @Override
+  public void onProviderDisabled (String provider) {
+  }
+  @Override
+  public void onProviderEnabled (String provider) {
+  }
+  @Override
+  public void onStatusChanged (String provider, int status, Bundle extras) {
+  }
 }
 
+//Toast.makeText(this, "after", Toast.LENGTH_LONG).show();

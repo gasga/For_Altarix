@@ -34,7 +34,8 @@
     </TextView> 
 	<EditText 
       android:layout_height="wrap_content" 
-      android:layout_width="match_parent" 
+      android:layout_width="match_parent"
+	  android:textSize="12sp"
       android:id="@+id/etName"
       android:fadeScrollbars="true"> 
     </EditText>
@@ -45,7 +46,8 @@
     </TextView> 
 	<EditText 
       android:layout_height="wrap_content" 
-      android:layout_width="match_parent" 
+      android:layout_width="match_parent"
+	  android:textSize="12sp"
       android:id="@+id/etText"
       android:fadeScrollbars="true"> 
     </EditText>
